@@ -1,11 +1,26 @@
 '''
 PyXlinkViewer init file
 
-This is the main protplugin  
+This is the main program for the PyXlinkViewer for PyMOL 2
 
-(c) Schrodinger, Inc.
+Copyright (C) Bob Schiffrin March 2020
 
-License: BSD-2-Clause
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Any queries, suggestions, or bug reports (!) please contact Bob Schiffrin:
+b.schiffrin@leeds.ac.uk
+
 '''
 
 from __future__ import absolute_import
@@ -104,6 +119,7 @@ def make_dialog():
             viewer.set_xlink_file_type(xlink_file_type)
             viewer.parse_xlink_file()
             viewer.calculate_distances()
+            viewer.test_monos_in_obj()
             populate_xlink_table()
             change_num_sat_viol()
             

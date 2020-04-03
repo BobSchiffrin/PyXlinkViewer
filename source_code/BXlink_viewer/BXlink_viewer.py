@@ -242,17 +242,19 @@ class BXlink_viewer():
         
         s1 = "obj " + self.obj + " and chain " + mono.chain + " and resi " + mono.resid + " and name " + self.atom_type
 
-        model1 = cmd.get_model(s1)
+        # only draw monolinks which are present in the PyMOL object
+        if cmd.count_atoms(s1) != 0:
 
-        #get x,y,z coordinates of each ca atom 
-        x1 = model1.atom[0].coord[0]
-        y1 = model1.atom[0].coord[1]
-        z1 = model1.atom[0].coord[2]
+            model1 = cmd.get_model(s1)
 
-        #Create and draw the GCO sphere
-        obj = [COLOR] + self.mono_colour + [SPHERE, x1, y1, z1, self.mono_size]
-        cmd.load_cgo(obj, mono.obj_name)
+            #get x,y,z coordinates of each ca atom 
+            x1 = model1.atom[0].coord[0]
+            y1 = model1.atom[0].coord[1]
+            z1 = model1.atom[0].coord[2]
 
+            #Create and draw the GCO sphere
+            obj = [COLOR] + self.mono_colour + [SPHERE, x1, y1, z1, self.mono_size]
+            cmd.load_cgo(obj, mono.obj_name)
 
 
 #------------------------------------------------------------------------------
@@ -275,20 +277,38 @@ class BXlink_viewer():
 
                 if cmd.count_atoms(s1) == 0 and cmd.count_atoms(s2) != 0:
                     xl.bRes1_in_obj = False
-                    print('\nWarning: Residue {0} in chain {1} is not present in the selected PyMOL object, so the {0}_{1}-{2}_{3} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
+                    print('\nWarning: Residue {0} in chain {1} is not present in the selected PyMOL object, so the {1}_{0}-{3}_{2} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
 
                 elif cmd.count_atoms(s1) != 0 and cmd.count_atoms(s2) == 0:
                     xl.bRes2_in_obj = False
-                    print('\nWarning: Residue {2} in chain {3} is not present in the selected PyMOL object, so the {0}_{1}-{2}_{3} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
+                    print('\nWarning: Residue {2} in chain {3} is not present in the selected PyMOL object, so the {1}_{0}-{3}_{2} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
 
 
                 elif cmd.count_atoms(s1) == 0 and cmd.count_atoms(s2) == 0:
                     xl.bRes1_in_obj = False
                     xl.bRes2_in_obj = False
-                    print('\nWarning: Residue {0} in chain {1} and residue {2} in chain {3} are both not present in the selected PyMOL object, so the {0}_{1}-{2}_{3} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
+                    print('\nWarning: Residue {0} in chain {1} and residue {2} in chain {3} are both not present in the selected PyMOL object, so the {1}_{0}-{3}_{2} xlink will not be displayed'.format(xl.resid1, xl.chain1, xl.resid2, xl.chain2))
 
             else: 
                 xl.distance = self.get_dist(s1,s2)
+
+
+    def test_monos_in_obj(self):
+        '''
+        This function tests to see if any of the monolink residues in the xlink file are not present in the and PyMOL object and 
+        prints a warning message to PyMOL display if not. NB. Monolink residues not in the object are still detailed in the dialog table
+        '''
+ 
+         # fill each obs_link distance so do this only once
+        for mono in self.obs_monos:
+
+            #first make the selections
+            s1 = "obj " + self.obj + " and chain " + mono.chain + " and resi " + mono.resid + " and name " + self.atom_type
+
+            #test that residue is in structure
+            if cmd.count_atoms(s1) == 0:
+                print('\nWarning: Residue {0} in chain {1} is not present in the selected PyMOL object, so the {1}_{0} monolink will not be displayed'.format(mono.resid, mono.chain))
+
 
 
 #------------------------------------------------------------------------------

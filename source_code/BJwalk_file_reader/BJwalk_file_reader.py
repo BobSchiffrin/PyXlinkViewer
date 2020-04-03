@@ -55,13 +55,15 @@ class BJwalk_file_reader:
             for line in f:
 
                 #deal with case where user has left some trailing whitespace at the end of a line 
-                line = line.rstrip()
+                line = line.strip()
 
                 if line: #test for case where user has added additional empty lines
-                    data = line.split('|')
+
+                    # deal with case that user has added extra spaces
+                    data = [x.strip() for x in line.split('|')]
 
 
-                    if len(data) == 3:
+                    if len(data) == 3 or len(data) == 2:
 
                         mono = Obs_mono()
                         mono.resid = data[0]
@@ -69,7 +71,7 @@ class BJwalk_file_reader:
                         mono.obj_name = mono.chain + '_' + mono.resid
                         self.monos.append(mono)
 
-                    elif len(data) == 5:
+                    elif len(data) == 5 or len(data) == 4:
                         xl = Obs_xlink()
                         xl.resid1 = data[0]
                         xl.chain1 = data[1]
