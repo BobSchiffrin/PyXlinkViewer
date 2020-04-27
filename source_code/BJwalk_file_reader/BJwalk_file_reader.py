@@ -48,6 +48,7 @@ class BJwalk_file_reader:
         self.xlinks = []
         self.monos = []
 
+    
     def read(self):
 
         with open(self.filename, 'rb') as f:
@@ -69,7 +70,9 @@ class BJwalk_file_reader:
                         mono.resid = data[0]
                         mono.chain = data[1]
                         mono.obj_name = mono.chain + '_' + mono.resid
-                        self.monos.append(mono)
+
+                        if self.mono_already_in_list(mono) == False:
+                            self.monos.append(mono)
 
                     elif len(data) == 5 or len(data) == 4:
                         xl = Obs_xlink()
@@ -78,12 +81,31 @@ class BJwalk_file_reader:
                         xl.resid2 = data[2]
                         xl.chain2 = data[3]
                         xl.obj_name = xl.chain1 + '_' + xl.resid1 + '-' + xl.chain2 + '_' + xl.resid2
-                        self.xlinks.append(xl)
+
+                        if self.xlink_already_in_list(xl) == False:
+                            self.xlinks.append(xl)
                     else:
                         return None
 
                 
-
         return self.xlinks, self.monos
+
+
+    def mono_already_in_list(self, new_mono):
+
+        for m in self.monos:
+            if m == new_mono:
+                return True
+
+        return False
+
+
+    def xlink_already_in_list(self, new_xl):
+
+        for xl in self.xlinks:
+                if xl == new_xl:
+                    return True
+
+        return False
 
             

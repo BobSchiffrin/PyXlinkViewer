@@ -48,6 +48,17 @@ class Obs_xlink():
         self.bRes1_in_obj = True
         self.bRes2_in_obj = True
 
+    
+    def __eq__(self,other) :
+        '''
+        Overloaded equality operator in order to remove duplicates in input XL file
+        '''
+        if self.resid1 == other.resid1 and self.resid2 == other.resid2 and self.chain1 == other.chain1 and self.chain2 == other.chain2:
+            return True
+        else:
+            return False
+
+
 
     def output(self):
         '''

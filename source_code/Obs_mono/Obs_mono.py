@@ -36,6 +36,15 @@ class Obs_mono():
         self.obj_name = ""
 
 
+    def __eq__(self,other) :
+        '''
+        Overloaded equality operator in order to remove duplicates in input XL file
+        '''
+        if self.resid == other.resid and self.chain == other.chain:
+            return True
+        else:
+            return False
+
 
     def output(self):
         '''

@@ -255,11 +255,13 @@ def make_dialog():
         viewer.set_show_inter(form.check_inter.isChecked())
         populate_xlink_table()
         viewer.update()
+        change_num_sat_viol()
 
     def check_intra_click():
         viewer.set_show_intra(form.check_intra.isChecked())
         populate_xlink_table()
         viewer.update()
+        change_num_sat_viol()
 
     def check_mono_click():
         viewer.set_show_mono(form.check_mono.isChecked())
@@ -323,7 +325,8 @@ def make_dialog():
 #---------------------------------------------------------------------------
     def change_num_sat_viol():
         '''
-        Changes the numbers of satisfied and violated xlinks in line-edit boxes. Only called when a change to threshold value is made
+        Changes the numbers of satisfied and violated xlinks in line-edit boxes. Called when either a change to threshold value is made,
+        or the intra or inter checkboxes are clicked on
         '''
 
         num_sat = 0
@@ -333,11 +336,24 @@ def make_dialog():
             
             # NB. check that both residues are in structure, if one is not, don't class as either sat or viol as not known
             if xl.distance <= viewer.threshold and xl.bRes1_in_obj == True and xl.bRes2_in_obj == True:
-                num_sat += 1
+
+                #check that inter/intra are selected
+                if viewer.show_inter == True and xl.chain1 != xl.chain2:
+                    num_sat += 1
+
+                if viewer.show_intra == True and xl.chain1 == xl.chain2:
+                    num_sat += 1
               
             if xl.distance > viewer.threshold and xl.bRes1_in_obj == True and xl.bRes2_in_obj == True: 
-                num_viol += 1
+                
+                #check that inter/intra are selected
+                if viewer.show_inter == True and xl.chain1 != xl.chain2:
+                    num_viol += 1
 
+                if viewer.show_intra == True and xl.chain1 == xl.chain2:
+                    num_viol += 1
+
+                
 
         form.line_edit_satisfied.setText(str(num_sat))
         form.line_edit_violated.setText(str(num_viol))
