@@ -1,1 +1,0 @@
-from BXlink_viewer import BXlink_viewer
